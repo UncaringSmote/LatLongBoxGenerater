@@ -29,32 +29,27 @@ def calculate_initial_compass_bearing(pointA, pointB):
 file_name = input("Enter your cords file: ")
 l = int(input("Enter your rect length in meters: "))
 w = int(input("Enter your rect width in meters: "))
-print(l)
-print(w)
 df = pd.read_csv(file_name)
-print(df.loc[df['Circle']==1]['Lat'].mean())
-print(df.loc[df['Circle']==1]['Lon'].mean())
 right_lat = df.loc[df['Circle']==1]['Lat'].mean()
 right_long = df.loc[df['Circle']==1]['Lon'].mean()
-print(right_long)
 center_lat = df.loc[df['Circle']==2]['Lat'].mean()
 center_long = df.loc[df['Circle']==2]['Lon'].mean()
 center = (center_lat,center_long)
 right = (right_lat,right_long)
-y= calculate_initial_compass_bearing(center,right)
-print(y)
+brn= calculate_initial_compass_bearing(center, right)
+
 
 length = l/1000.0
 width = w/1000.0
 half_length = length/2.0
 half_width = width/2.0
 
-middle_top = distance.distance(kilometers=half_width).destination(Point(center_lat,center_long),y-90)
-middle_bottom = distance.distance(kilometers=half_width).destination(Point(center_lat,center_long),y+90)
-top_right = distance.distance(kilometers=half_length).destination(middle_top,y)
-top_left = distance.distance(kilometers=half_length).destination(middle_top,y+180)
-bottom_right = distance.distance(kilometers=half_length).destination(middle_bottom,y)
-bottom_left = distance.distance(kilometers=half_length).destination(middle_bottom,y+180)
+middle_top = distance.distance(kilometers=half_width).destination(Point(center_lat,center_long), brn - 90)
+middle_bottom = distance.distance(kilometers=half_width).destination(Point(center_lat,center_long), brn + 90)
+top_right = distance.distance(kilometers=half_length).destination(middle_top, brn)
+top_left = distance.distance(kilometers=half_length).destination(middle_top, brn + 180)
+bottom_right = distance.distance(kilometers=half_length).destination(middle_bottom, brn)
+bottom_left = distance.distance(kilometers=half_length).destination(middle_bottom, brn + 180)
 f = open("polygon.poly", "w")
 f.write("#Generated Box!\n")
 f.write(str(top_right.latitude)+ " " + str(top_right.longitude) +"\n")
